@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Login to the Surfing Platform!</title>
+</head>
+<body>
+  <h1 style="text-align:center;">Login and surf to the flag with us!</h1>
+  <form action="login" method="post" style="display: flex;flex-direction: column;max-width: 25rem;margin: 0 auto;">
+    <input type="text" name="username" placeholder="Username" id="username" required>
+    <input type="password" name="password" placeholder="Password" id="password" required>
+    <input type="text" name="token" placeholder="Auth Token" id="token" required>
+    <input type="submit" value="Login" style="margin-top: 1rem;">
+  </form>
+  <% if (locals.message) { %>
+    <p style="text-align: center; font-size: 1.7em;margin-top: 3rem;">
+      <%= message %>
+    </p>
+  <% } %>
+  <img src="/static/beachflags.jpg" alt="flag in beach" style="margin: 3rem auto;display: flex;" />
+</body>
+</html>

@@ -1,0 +1,16 @@
+version: '3'
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    security_opt:
+      - no-new-privileges
+    ulimits:
+      nproc: 20
+      nofile: 50
+    ports:
+      - "8080:80" # local:container

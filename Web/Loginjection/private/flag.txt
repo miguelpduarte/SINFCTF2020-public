@@ -1,0 +1,1 @@
+SINFCTF2020{SQL_inj3cti0n_to_w1n!}

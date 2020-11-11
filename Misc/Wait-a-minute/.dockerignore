@@ -1,0 +1,8 @@
+.git/
+/deps/
+/_build/
+/private/deps/
+/private/_build/
+/private/wait_a_minute/deps/
+/private/wait_a_minute/_build/
+erl_crash.dump

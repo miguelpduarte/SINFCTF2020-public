@@ -1,0 +1,68 @@
+version: '2'
+# Taken from the CTFd repo on github, adapted. Can be used as a template
+
+services:
+  ctfd:
+    image: ctfd/ctfd
+    user: root
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      # - SECRET_KEY= #this probably can be left to be dealt with via the .ctfd_secret_key file, see "Tip" in https://docs.ctfd.io/docs/deployment/#docker
+      - UPLOAD_FOLDER=/var/uploads
+      - DATABASE_URL=mysql+pymysql://ctfd:gandactfd00d@db/ctfd
+      - REDIS_URL=redis://cache:6379
+      - WORKERS=2 # Needs testing
+      - LOG_FOLDER=/var/log/CTFd
+      - ACCESS_LOG=-
+      - ERROR_LOG=-
+      - REVERSE_PROXY=true
+    volumes:
+      - .data/CTFd/logs:/var/log/CTFd
+      - .data/CTFd/uploads:/var/uploads
+      - ./.ctfd_secret_key:/opt/CTFd/.ctfd_secret_key
+      # - .:/opt/CTFd:ro # This was used when running directly in the repo, but we are using the dockerhub image here. This caused errors with not having some files in /opt/ like docker-entrypoint.sh since the volume was mounted and deleted stuff.
+    depends_on:
+      - db
+    networks:
+        default:
+        internal:
+
+  nginx:
+    image: nginx:1.17
+    volumes:
+      - ./nginx-http.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+      # - 443:443 # If using TLS
+    depends_on:
+      - ctfd
+
+  db:
+    image: mariadb:10.4.12
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=gandactfd00d
+      - MYSQL_USER=ctfd
+      - MYSQL_PASSWORD=gandactfd00d
+      - MYSQL_DATABASE=ctfd
+    volumes:
+      - .data/mysql:/var/lib/mysql
+    networks:
+        internal:
+    # This command is required to set important mariadb defaults
+    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
+
+  cache:
+    image: redis:4
+    restart: always
+    volumes:
+    - .data/redis:/data
+    networks:
+        internal:
+
+networks:
+    default:
+    internal:
+        internal: true
