@@ -14,4 +14,4 @@ However, there is a format string vuln first, which can lead to leaking the cana
 
 ## Related resources
 
-https://ironstone.gitbook.io/notes/types/stack/canaries
+https://ir0nstone.gitbook.io/notes/types/stack/canaries
